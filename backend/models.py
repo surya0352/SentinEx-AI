@@ -65,3 +65,35 @@ class Image(Base):
         DateTime,
         default=datetime.utcnow
     )
+
+
+class Fingerprint(Base):
+
+    __tablename__ = "fingerprints"
+
+    id = Column(
+        Integer,
+        primary_key=True,
+        index=True
+    )
+
+    image_id = Column(
+        Integer,
+        nullable=False
+    )
+
+    phash = Column(
+        String,
+        nullable=False,
+        index=True
+    )
+
+    dhash = Column(
+        String,
+        nullable=False
+    )
+
+    created_at = Column(
+        DateTime,
+        default=datetime.utcnow
+    )
