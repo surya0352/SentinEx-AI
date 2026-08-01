@@ -33,6 +33,9 @@ from backend.services.matching_service import (
     find_similar_images
 )
 
+from backend.services.content_detection_service import (
+    detect_sensitive_content
+)
 
 router = APIRouter(
     prefix="/cases",
@@ -256,6 +259,9 @@ def upload_image(
         file_path
     )
 
+    content_result = detect_sensitive_content(
+    file_path
+)
 
     # --------------------------------------------------------
     # Save fingerprints
@@ -287,7 +293,9 @@ def upload_image(
 
         "phash": fingerprints["phash"],
 
-        "dhash": fingerprints["dhash"]
+        "dhash": fingerprints["dhash"],
+
+        "content_detection": content_result
     }
 
 
