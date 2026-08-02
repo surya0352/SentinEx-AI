@@ -32,6 +32,17 @@ function App() {
   // MEMORY: Store our generated PDFs/Reports
   const [myReports, setMyReports] = useState([]);
 
+  // TOAST NOTIFICATION STATE
+  const [toast, setToast] = useState(null);
+
+  function showToast(message, type = "success") {
+    setToast({ message, type });
+    // Auto-hide after 3.5 seconds
+    setTimeout(() => {
+      setToast(null);
+    }, 3500);
+  }
+
   // FUNCTIONS to update memory
   function handleCaseCreated(newCase) {
     if (newCase) {
@@ -77,7 +88,7 @@ function App() {
     );
   }
 
-  if (page === "workspace") {
+if (page === "workspace") {
     return (
       <CaseWorkspace
         caseData={selectedCase}
@@ -85,6 +96,7 @@ function App() {
         onAnalyzeImage={() => setPage("analyze")}
         onAnalyzeVideo={() => setPage("video")}
         onReportGenerated={handleReportGenerated}
+        onToast={showToast} // <-- NEW
       />
     );
   }
@@ -97,7 +109,7 @@ function App() {
     return <AnalyzeVideo onBack={() => setPage("dashboard")} />;
   }
 
-  if (page === "my-cases") {
+if (page === "my-cases") {
     return (
       <MyCases 
         cases={myCases} 
@@ -106,8 +118,10 @@ function App() {
           setSelectedCase(item);
           setPage("workspace");
         }} 
-        // Pass the delete function down!
-        onDeleteCase={handleDeleteCase} 
+        onDeleteCase={(id) => {
+          handleDeleteCase(id);
+          showToast("Case workspace securely erased.", "error"); // <-- NEW
+        }} 
       />
     );
   }
@@ -117,7 +131,10 @@ function App() {
       <Reports 
         reports={myReports} 
         onBack={() => setPage("dashboard")} 
-        onDeleteReport={handleDeleteReport} 
+        onDeleteReport={(id) => {
+          handleDeleteReport(id);
+          showToast("Report permanently deleted.", "error"); // <-- NEW
+        }} 
       />
     );
   }
@@ -276,6 +293,18 @@ function App() {
           </div>
         </div>
       </main>
+
+      {toast && (
+        <div className="toast-container">
+          <div className={`toast ${toast.type}`}>
+            <span className="toast-icon">
+              {toast.type === "success" ? "✓" : "🗑️"}
+            </span>
+            {toast.message}
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

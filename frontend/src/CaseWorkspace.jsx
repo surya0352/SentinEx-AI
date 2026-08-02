@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { jsPDF } from "jspdf";
 import "./CaseWorkspace.css";
 
-function CaseWorkspace({ caseData, onBack, onAnalyzeImage, onAnalyzeVideo, onReportGenerated }) {
+function CaseWorkspace({ caseData, onBack, onAnalyzeImage, onAnalyzeVideo, onReportGenerated, onToast }) {
   const [isGenerating, setIsGenerating] = useState(false);
 
   // Use the passed-in case data, or fall back to a default if none exists
@@ -82,6 +82,11 @@ function CaseWorkspace({ caseData, onBack, onAnalyzeImage, onAnalyzeVideo, onRep
       }
 
       setIsGenerating(false);
+
+      if (onToast) {
+        onToast("IT Act Complaint saved to Evidence Locker.", "success");
+      }
+
     }, 1200);
   };
 
