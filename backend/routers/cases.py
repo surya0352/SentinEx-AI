@@ -1,3 +1,4 @@
+
 from fastapi import (
     APIRouter,
     Depends,
@@ -45,9 +46,12 @@ from backend.services.analysis_service import (
     analyze_image
 )
 
-
 from backend.services.case_analysis_service import (
     analyze_case
+)
+
+from backend.services.evidence_service import (
+    get_case_evidence
 )
 
 
@@ -341,6 +345,7 @@ def upload_image(
         }
     }
 
+
 # ============================================================
 # GET IMAGE DETAILS
 # ============================================================
@@ -399,6 +404,7 @@ def get_image_details(
 
         "created_at": image.created_at
     }
+
 
 # ============================================================
 # ANALYZE IMAGE
@@ -466,6 +472,7 @@ def analyze_case_image(
 
     return analysis
 
+
 # ============================================================
 # CASE-LEVEL ANALYSIS
 # ============================================================
@@ -505,6 +512,47 @@ def analyze_case_endpoint(
     # --------------------------------------------------------
 
     return analysis
+
+
+# ============================================================
+# GET CASE EVIDENCE
+# ============================================================
+
+@router.get(
+    "/{case_id}/evidence"
+)
+def get_evidence(
+    case_id: int,
+    db: Session = Depends(get_db)
+):
+
+    # --------------------------------------------------------
+    # Get complete case evidence
+    # --------------------------------------------------------
+
+    evidence = get_case_evidence(
+        case_id,
+        db
+    )
+
+
+    # --------------------------------------------------------
+    # Check if case exists
+    # --------------------------------------------------------
+
+    if evidence is None:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Case not found"
+        )
+
+
+    # --------------------------------------------------------
+    # Return evidence
+    # --------------------------------------------------------
+
+    return evidence
 
 
 # ============================================================
