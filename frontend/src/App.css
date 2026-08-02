@@ -1483,3 +1483,75 @@ button {
   }
 
 }
+
+/* =========================
+   AI SCANNER ANIMATION (THE FLEX)
+========================= */
+
+.preview-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  border: 2px solid #1f2937;
+  max-width: 100%;
+  margin: 0 auto 20px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #0b0f16;
+}
+
+.preview-image {
+  max-width: 100%;
+  max-height: 400px;
+  object-fit: contain;
+  opacity: 0.8;
+}
+
+/* The dark tint over the image while scanning */
+.scan-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(16, 185, 129, 0.05); /* Slight green hacker tint */
+  z-index: 10;
+}
+
+/* The glowing laser line */
+.scan-line {
+  position: absolute;
+  width: 100%;
+  height: 3px;
+  background: #10b981;
+  box-shadow: 0 0 15px 3px rgba(16, 185, 129, 0.6);
+  animation: scan-animation 1.5s linear infinite;
+  z-index: 20;
+}
+
+/* Make it sweep top to bottom */
+@keyframes scan-animation {
+  0% { top: -5%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 105%; opacity: 0; }
+}
+
+/* Bounding box corners that blink */
+.bounding-box {
+  position: absolute;
+  border: 2px solid #10b981;
+  width: 30%;
+  height: 30%;
+  top: 35%;
+  left: 35%;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+  animation: pulse-box 0.8s ease-in-out infinite alternate;
+  z-index: 15;
+}
+
+@keyframes pulse-box {
+  0% { transform: scale(1); opacity: 0.3; }
+  100% { transform: scale(1.05);}
+}

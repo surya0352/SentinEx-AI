@@ -1,0 +1,259 @@
+/* =========================
+   CASE WORKSPACE (DARK SOC THEME)
+========================= */
+
+.case-workspace {
+  min-height: 100vh;
+  padding: 40px 6% 70px;
+  background: radial-gradient(circle at 70% 0%, #18233d 0%, #080a0f 45%);
+  color: #f5f7fa;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.workspace-top {
+  max-width: 1100px;
+  margin: 0 auto 35px;
+}
+
+.back-button {
+  border: none;
+  background: transparent;
+  color: #929baa;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 30px;
+  transition: color 0.2s;
+}
+
+.back-button:hover {
+  color: white;
+}
+
+.case-label,
+.section-label {
+  display: block;
+  margin: 0 0 7px;
+  color: #738cff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.workspace-top h1 {
+  margin: 0;
+  font-size: 34px;
+  font-weight: 700;
+}
+
+.case-id {
+  margin-top: 8px;
+  color: #718096;
+  font-size: 13px;
+}
+
+/* =========================
+   SUMMARY CARDS
+========================= */
+
+.case-summary {
+  max-width: 1100px;
+  margin: 0 auto 25px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.summary-card {
+  background: #0d1017;
+  border: 1px solid #222936;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.summary-card span {
+  color: #7f8899;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
+.summary-card strong {
+  font-size: 25px;
+}
+
+.status-badge {
+  width: fit-content;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px !important;
+  background: #202943;
+  color: #9eb1ff;
+}
+
+/* =========================
+   MAIN GRID
+========================= */
+
+.workspace-grid {
+  max-width: 1100px;
+  margin: 0 auto 25px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+
+.workspace-card {
+  background: #0d1017;
+  border: 1px solid #252d3b;
+  border-radius: 16px;
+  padding: 30px;
+}
+
+.workspace-card h2 {
+  margin: 8px 0;
+  font-size: 22px;
+}
+
+.workspace-card p {
+  color: #858e9f;
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+/* =========================
+   ANALYSIS BUTTONS
+========================= */
+
+.analysis-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.analysis-button {
+  background: #0b0f16;
+  border: 1px solid #293344;
+  border-radius: 11px;
+  padding: 17px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  text-align: left;
+  color: white;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.analysis-button:hover:not(:disabled) {
+  border-color: #6175b7;
+  background: #121824;
+  transform: translateY(-2px);
+}
+
+.analysis-button:disabled {
+  cursor: wait;
+}
+
+.analysis-button span {
+  font-size: 24px;
+}
+
+.analysis-button div {
+  flex: 1;
+}
+
+.analysis-button strong {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.analysis-button small {
+  display: block;
+  color: #737d8e;
+  font-size: 11px;
+}
+
+/* =========================
+   LEGAL ACTION SPECIFICS
+========================= */
+
+.legal-action-card {
+  border-left: 4px solid #10b981;
+}
+
+.report-button {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.report-button.generating {
+  background: #121824;
+  border-color: #10b981;
+}
+
+.report-button.generating strong {
+  color: #10b981;
+}
+
+/* =========================
+   PRIVACY BOX
+========================= */
+
+.privacy-box {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  gap: 15px;
+  padding: 18px;
+  border: 1px solid #252c3a;
+  border-radius: 10px;
+  background: #0c1016;
+}
+
+.privacy-box > span {
+  font-size: 20px;
+}
+
+.privacy-box strong {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 5px;
+}
+
+.privacy-box p {
+  margin: 0;
+  color: #707a8b;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 900px) {
+  .case-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .workspace-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 500px) {
+  .case-workspace {
+    padding: 25px 18px 50px;
+  }
+  .analysis-actions {
+    grid-template-columns: 1fr;
+  }
+}

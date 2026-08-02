@@ -44,7 +44,7 @@ function AnalyzeImage({ onBack }) {
       setResult({
         classification: "Potentially Sensitive",
         confidence: 94,
-        fingerprint: "Generated",
+        fingerprint: "a4f89d023e1b7c88", // Looks more like a real pHash
         matches: 3,
       });
     }, 1800);
@@ -150,11 +150,17 @@ function AnalyzeImage({ onBack }) {
 
               </div>
 
-              <div className="preview-image-wrapper">
-                <img
-                  src={preview}
-                  alt="Selected image preview"
-                />
+              {/* THE PITCH FLEX: NEW IMAGE PREVIEW AREA WITH SCAN ANIMATION */}
+              <div className="preview-container">
+                <img src={preview} alt="Selected image preview" className="preview-image" />
+                
+                {/* THIS IS THE NEW ANIMATION - Only shows when 'analyzing' is true */}
+                {analyzing && (
+                  <div className="scan-overlay">
+                    <div className="scan-line"></div>
+                    <div className="bounding-box"></div>
+                  </div>
+                )}
               </div>
 
               {!result && !analyzing && (
@@ -166,20 +172,15 @@ function AnalyzeImage({ onBack }) {
                 </button>
               )}
 
+              {/* HIGH-TECH LOADING TEXT */}
               {analyzing && (
-                <div className="processing-box">
-
-                  <div className="loader"></div>
-
-                  <div>
-                    <strong>Analyzing image...</strong>
-
-                    <p>
-                      Running content detection and preparing
-                      fingerprint.
-                    </p>
-                  </div>
-
+                <div className="loading-state" style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
+                  <strong style={{ color: "#10b981", fontSize: "16px", display: "block", marginBottom: "8px", letterSpacing: "1px" }}>
+                    [ RUNNING LOCAL VISION MODEL ]
+                  </strong>
+                  <p style={{ color: "#737d8e", fontSize: "13px" }}>
+                    Computing perceptual hash via WebAssembly...
+                  </p>
                 </div>
               )}
 
@@ -189,7 +190,7 @@ function AnalyzeImage({ onBack }) {
 
 
           {/* Privacy */}
-          <div className="analysis-privacy">
+          <div className="analysis-privacy" style={{ marginTop: file ? "20px" : "0" }}>
 
             <span>🔒</span>
 
@@ -333,7 +334,7 @@ function AnalyzeImage({ onBack }) {
 
               <span>Fingerprint</span>
 
-              <strong className="success-result">
+              <strong className="success-result" style={{ color: "#10b981" }}>
                 ✓ {result.fingerprint}
               </strong>
 

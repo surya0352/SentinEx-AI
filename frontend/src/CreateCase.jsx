@@ -51,7 +51,7 @@ function CreateCase({ onBack, onCreated }) {
           <p>Your case workspace has been created successfully.</p>
 
           <button className="create-button" onClick={() => onCreated(null)}>
-            Go to Dashboard
+            Go to Case Workspace
           </button>
         </div>
       </div>
