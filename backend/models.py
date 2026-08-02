@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, Float, Boolean
 from datetime import datetime
 
 from backend.database import Base
@@ -31,6 +31,7 @@ class Case(Base):
         default=datetime.utcnow
     )
 
+
 class Image(Base):
 
     __tablename__ = "images"
@@ -59,6 +60,28 @@ class Image(Base):
     content_type = Column(
         String,
         nullable=False
+    )
+
+    # AI Content Detection Results
+
+    ai_label = Column(
+        String,
+        nullable=True
+    )
+
+    ai_confidence = Column(
+        Float,
+        nullable=True
+    )
+
+    is_sensitive = Column(
+        Boolean,
+        nullable=True
+    )
+
+    risk_level = Column(
+        String,
+        nullable=True
     )
 
     created_at = Column(

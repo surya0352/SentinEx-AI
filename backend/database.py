@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
 
-DATABASE_URL = "sqlite:///./safetrace.db"
+DATABASE_URL = "sqlite:///./sentinEx-AI.db"
 
 
 engine = create_engine(

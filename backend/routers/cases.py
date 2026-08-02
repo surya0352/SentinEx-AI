@@ -37,6 +37,11 @@ from backend.services.content_detection_service import (
     detect_sensitive_content
 )
 
+from backend.services.risk_service import (
+    calculate_risk
+)
+
+
 router = APIRouter(
     prefix="/cases",
     tags=["Cases"]
@@ -164,7 +169,7 @@ def upload_image(
 ):
 
     # --------------------------------------------------------
-    # Check if case exists
+    # 1. Check if case exists
     # --------------------------------------------------------
 
     case = db.query(
@@ -182,7 +187,7 @@ def upload_image(
 
 
     # --------------------------------------------------------
-    # Validate file type
+    # 2. Validate file type
     # --------------------------------------------------------
 
     allowed_types = [
@@ -200,7 +205,7 @@ def upload_image(
 
 
     # --------------------------------------------------------
-    # Generate unique filename
+    # 3. Generate unique filename
     # --------------------------------------------------------
 
     unique_filename = (
@@ -209,7 +214,7 @@ def upload_image(
 
 
     # --------------------------------------------------------
-    # Create file path
+    # 4. Create file path
     # --------------------------------------------------------
 
     file_path = os.path.join(
@@ -219,7 +224,7 @@ def upload_image(
 
 
     # --------------------------------------------------------
-    # Save uploaded image
+    # 5. Save uploaded image
     # --------------------------------------------------------
 
     with open(
@@ -234,14 +239,47 @@ def upload_image(
 
 
     # --------------------------------------------------------
-    # Save image metadata
+    # 6. Generate pHash and dHash
+    # --------------------------------------------------------
+
+    fingerprints = generate_fingerprints(
+        file_path
+    )
+
+
+    # --------------------------------------------------------
+    # 7. Run AI content detection
+    # --------------------------------------------------------
+
+    content_result = detect_sensitive_content(
+        file_path
+    )
+
+
+    # --------------------------------------------------------
+    # 8. Calculate risk level
+    # --------------------------------------------------------
+
+    risk_level = calculate_risk(
+        is_sensitive=content_result["is_sensitive"],
+        confidence=content_result["confidence"]
+    )
+
+
+    # --------------------------------------------------------
+    # 9. Save image metadata + AI results
     # --------------------------------------------------------
 
     new_image = Image(
         case_id=case_id,
         filename=file.filename,
         file_path=file_path,
-        content_type=file.content_type
+        content_type=file.content_type,
+
+        ai_label=content_result["label"],
+        ai_confidence=content_result["confidence"],
+        is_sensitive=content_result["is_sensitive"],
+        risk_level=risk_level
     )
 
     db.add(new_image)
@@ -252,19 +290,7 @@ def upload_image(
 
 
     # --------------------------------------------------------
-    # Generate pHash and dHash
-    # --------------------------------------------------------
-
-    fingerprints = generate_fingerprints(
-        file_path
-    )
-
-    content_result = detect_sensitive_content(
-    file_path
-)
-
-    # --------------------------------------------------------
-    # Save fingerprints
+    # 10. Save fingerprints
     # --------------------------------------------------------
 
     new_fingerprint = Fingerprint(
@@ -279,7 +305,7 @@ def upload_image(
 
 
     # --------------------------------------------------------
-    # Temporary response for testing
+    # 11. Return response
     # --------------------------------------------------------
 
     return {
@@ -295,9 +321,75 @@ def upload_image(
 
         "dhash": fingerprints["dhash"],
 
-        "content_detection": content_result
+        "content_detection": {
+            "is_sensitive": content_result["is_sensitive"],
+
+            "confidence": content_result["confidence"],
+
+            "label": content_result["label"],
+
+            "risk_level": risk_level
+        }
     }
 
+# ============================================================
+# GET IMAGE DETAILS
+# ============================================================
+
+@router.get(
+    "/{case_id}/images/{image_id}"
+)
+def get_image_details(
+    case_id: int,
+    image_id: int,
+    db: Session = Depends(get_db)
+):
+
+    # --------------------------------------------------------
+    # Find image belonging to case
+    # --------------------------------------------------------
+
+    image = db.query(
+        Image
+    ).filter(
+        Image.id == image_id,
+        Image.case_id == case_id
+    ).first()
+
+    if image is None:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Image not found"
+        )
+
+
+    # --------------------------------------------------------
+    # Return stored image and AI details
+    # --------------------------------------------------------
+
+    return {
+
+        "image_id": image.id,
+
+        "case_id": image.case_id,
+
+        "filename": image.filename,
+
+        "file_path": image.file_path,
+
+        "content_type": image.content_type,
+
+        "ai_label": image.ai_label,
+
+        "ai_confidence": image.ai_confidence,
+
+        "is_sensitive": image.is_sensitive,
+
+        "risk_level": image.risk_level,
+
+        "created_at": image.created_at
+    }
 
 # ============================================================
 # FIND SIMILAR IMAGES
