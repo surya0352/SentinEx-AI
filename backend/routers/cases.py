@@ -41,6 +41,9 @@ from backend.services.risk_service import (
     calculate_risk
 )
 
+from backend.services.analysis_service import (
+    analyze_image
+)
 
 router = APIRouter(
     prefix="/cases",
@@ -390,6 +393,73 @@ def get_image_details(
 
         "created_at": image.created_at
     }
+
+# ============================================================
+# ANALYZE IMAGE
+# ============================================================
+
+@router.get(
+    "/{case_id}/images/{image_id}/analysis"
+)
+def analyze_case_image(
+    case_id: int,
+    image_id: int,
+    db: Session = Depends(get_db)
+):
+
+    # --------------------------------------------------------
+    # 1. Check if case exists
+    # --------------------------------------------------------
+
+    case = db.query(
+        Case
+    ).filter(
+        Case.id == case_id
+    ).first()
+
+    if case is None:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Case not found"
+        )
+
+
+    # --------------------------------------------------------
+    # 2. Check if image belongs to case
+    # --------------------------------------------------------
+
+    image = db.query(
+        Image
+    ).filter(
+        Image.id == image_id,
+        Image.case_id == case_id
+    ).first()
+
+    if image is None:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Image not found"
+        )
+
+
+    # --------------------------------------------------------
+    # 3. Run combined analysis
+    # --------------------------------------------------------
+
+    analysis = analyze_image(
+        image_id,
+        db
+    )
+
+
+    # --------------------------------------------------------
+    # 4. Return analysis
+    # --------------------------------------------------------
+
+    return analysis
+
 
 # ============================================================
 # FIND SIMILAR IMAGES

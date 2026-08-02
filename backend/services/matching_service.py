@@ -25,7 +25,7 @@ def find_similar_images(
 
             matches.append({
                 "image_id": fingerprint.image_id,
-                "distance": distance
+                "distance": int(distance)
             })
 
     return matches
