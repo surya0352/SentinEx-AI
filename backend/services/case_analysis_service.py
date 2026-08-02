@@ -143,6 +143,10 @@ def analyze_case(
                 "image_id"
             ]
 
+            matched_case_id = match.get(
+                "case_id"
+            )
+
 
             # ------------------------------------------------
             # Don't match image with itself
@@ -151,6 +155,19 @@ def analyze_case(
             if matched_image_id == image.id:
 
                 continue
+
+
+            # ------------------------------------------------
+            # Determine match context
+            # ------------------------------------------------
+
+            if matched_case_id == case_id:
+
+                match_context = "SAME_CASE"
+
+            else:
+
+                match_context = "DIFFERENT_CASE"
 
 
             # ------------------------------------------------
@@ -180,6 +197,15 @@ def analyze_case(
 
                 "image_id_2":
                     image_pair[1],
+
+                "case_id_1":
+                    case_id,
+
+                "case_id_2":
+                    matched_case_id,
+
+                "match_context":
+                    match_context,
 
                 "distance":
                     int(
@@ -223,11 +249,14 @@ def analyze_case(
 
     return {
 
-        "case_id": case.id,
+        "case_id":
+            case.id,
 
-        "case_number": case.case_number,
+        "case_number":
+            case.case_number,
 
-        "status": case.status,
+        "status":
+            case.status,
 
         "analysis": {
 
@@ -235,9 +264,11 @@ def analyze_case(
             # Image Statistics
             # -----------------------------------------------
 
-            "total_images": total_images,
+            "total_images":
+                total_images,
 
-            "sensitive_images": sensitive_images,
+            "sensitive_images":
+                sensitive_images,
 
 
             # -----------------------------------------------
@@ -246,11 +277,14 @@ def analyze_case(
 
             "risk_summary": {
 
-                "high": high_risk_images,
+                "high":
+                    high_risk_images,
 
-                "medium": medium_risk_images,
+                "medium":
+                    medium_risk_images,
 
-                "low": low_risk_images
+                "low":
+                    low_risk_images
 
             },
 
