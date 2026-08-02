@@ -45,6 +45,12 @@ from backend.services.analysis_service import (
     analyze_image
 )
 
+
+from backend.services.case_analysis_service import (
+    analyze_case
+)
+
+
 router = APIRouter(
     prefix="/cases",
     tags=["Cases"]
@@ -456,6 +462,46 @@ def analyze_case_image(
 
     # --------------------------------------------------------
     # 4. Return analysis
+    # --------------------------------------------------------
+
+    return analysis
+
+# ============================================================
+# CASE-LEVEL ANALYSIS
+# ============================================================
+
+@router.get(
+    "/{case_id}/analysis"
+)
+def analyze_case_endpoint(
+    case_id: int,
+    db: Session = Depends(get_db)
+):
+
+    # --------------------------------------------------------
+    # Run case-level analysis
+    # --------------------------------------------------------
+
+    analysis = analyze_case(
+        case_id,
+        db
+    )
+
+
+    # --------------------------------------------------------
+    # Check if case exists
+    # --------------------------------------------------------
+
+    if analysis is None:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Case not found"
+        )
+
+
+    # --------------------------------------------------------
+    # Return analysis
     # --------------------------------------------------------
 
     return analysis
